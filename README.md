@@ -23,7 +23,7 @@ Want to go the extra mile? Here's few suggestion of things we'd like to see (or 
 - Implement solution in TypeScript
 - Native modules using Kotlin/Swift
 - Localization: support for multiple languages (English, French, ...)
-- Dual communication js<>Java/Kotlin/swift
+- Between realms communication  (JS -> Native or Native -> JS). For example: Expense List (JS Realm) sends properties to next Fragment/ViewController (Native Realm) and this responds back to the (JS Realm) with some result
 
 ## What we're looking for
 - Using high-quality existing libraries or small amounts of custom code. 
