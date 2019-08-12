@@ -1,7 +1,7 @@
 # Mobile challenge
 Implement an expenses list fetching all expenses from the provided API. Allow the user to add notes and upload receipt pictures to each expense.
 
-See the [API details](TODO) for implementation.
+See the [API details](https://github.com/pleo-io/mobile-challenge/tree/master/api) for implementation.
 
 ## Functional requirements
 - User can list expenses
