@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "586116828874",
+    "firebase_url": "https://lex-cruxoy.firebaseio.com",
+    "project_id": "lex-cruxoy",
+    "storage_bucket": "lex-cruxoy.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:586116828874:android:9632e648404b88e495ae33",
+        "android_client_info": {
+          "package_name": "com.pleolouis"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "586116828874-7qof18l7tjtvgck9e47po8ck0frlrnb6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMI6kYWPnK6YbvgrrfdmVFMKz_cWWxGWc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "586116828874-680fq3b9d8hvdrasua45e0voptgaoj2e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
