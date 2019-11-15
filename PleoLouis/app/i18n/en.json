@@ -22,7 +22,8 @@
     "iosReactotronHint": "If this doesn't work, ensure the Reactotron desktop app is running and reload app."
   },
   "expenseScreen": {
-    "takePicture": "SNAP"
+    "takePicture": "SNAP",
+    "pay": "paid"
   },
   "storybook": {
     "placeholder": "Placeholder",

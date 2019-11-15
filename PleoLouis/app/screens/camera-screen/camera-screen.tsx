@@ -6,6 +6,8 @@ import {
   ViewStyle,
   TouchableOpacity,
   LayoutRectangle,
+  ImageStyle,
+  Image,
 } from "react-native"
 import { NavigationScreenProps } from "react-navigation"
 import { Screen } from "../../components/screen"
@@ -13,14 +15,16 @@ import { Button } from "../../components/button"
 import { Header } from "../../components/header"
 import { color, spacing } from "../../theme"
 
-import {
-  RNCamera as Camera,
-  RNCamera,
-  TakePictureResponse,
-} from "react-native-camera"
+import { RNCamera as Camera, RNCamera, TakePictureResponse } from "react-native-camera"
 import RNTextDetector from "react-native-text-detector"
 import { Text } from "../../components/text"
 import { screenHeight, screenWidth } from "../../utils/dimension"
+import { Expense } from "../../models/expense"
+
+import RepeatIcon from "./repeat-snap.svg"
+import SnapIcon from "./snap-max.svg"
+import CheckIcon from "./check.svg"
+import { useStore } from "../../models/root-store"
 
 const PICTURE_OPTIONS = {
   quality: 1,
@@ -34,33 +38,11 @@ const CONTAINER: ViewStyle = {
   paddingHorizontal: spacing[4],
 }
 
-const HEADER: TextStyle = {
-  paddingTop: spacing[3],
-  paddingBottom: spacing[5] - 1,
-  paddingHorizontal: 0,
-}
-const HEADER_TITLE: TextStyle = {
-  fontSize: 12,
-  lineHeight: 15,
-  textAlign: "center",
-  letterSpacing: 1.5,
-}
 const FOOTER_CONTENT: ViewStyle = {
   paddingVertical: spacing[4],
   paddingHorizontal: spacing[4],
-}
-
-const CONTINUE: ViewStyle = {
-  alignSelf: "center",
-  width: "80%",
-  paddingVertical: spacing[4],
-  paddingHorizontal: spacing[4],
-}
-const CONTINUE_TEXT: TextStyle = {
-  fontSize: 18,
-  fontWeight: "400",
-  fontFamily: "Roboto",
-  letterSpacing: 0.8,
+  flexDirection: "row",
+  justifyContent: "space-around",
 }
 
 const CAMERA_BORDER: ViewStyle = {
@@ -75,6 +57,11 @@ const CAMERA: ViewStyle = {
   justifyContent: "center",
 }
 
+const CAMERA_PREVIEW: ImageStyle = {
+  width: "100%",
+  height: "100%",
+}
+
 const VISION_RECT: ViewStyle = {
   position: "absolute",
   alignItems: "center",
@@ -83,20 +70,42 @@ const VISION_RECT: ViewStyle = {
   borderColor: color.palette.hotpink,
 }
 
-export interface CameraScreenProps extends NavigationScreenProps<{}> {}
+const CONTINUE: ViewStyle = {
+  alignSelf: "center",
+  borderRadius: 50,
+  paddingVertical: spacing[4],
+  paddingHorizontal: spacing[4],
+}
+
+const ICON: ImageStyle & TextStyle = {
+  alignSelf: "center",
+  width: 44,
+  height: 44,
+  color: color.palette.white,
+}
+
+export interface CameraScreenProps extends NavigationScreenProps<{ expenseData?: Expense }> {}
 
 export const CameraScreen: React.FunctionComponent<CameraScreenProps> = props => {
+  const expenseData = props.navigation.getParam("expenseData", null)
+
   const camera = React.useRef<RNCamera>()
 
   const goBack = React.useMemo(() => () => props.navigation.goBack(null), [props.navigation])
 
+  const {} = useStore()
+  
+  const [imageData, setImageData] = React.useState()
   const [visionData, setVisionData] = React.useState([])
   const [cameraLayout, setCameraLayout] = React.useState<LayoutRectangle>()
+
+  const uploadImage = async () => {
+
+  }
 
   const getUpdatedVisionData = (visionResp, image: TakePictureResponse) => {
     const imageToScreenX = screenWidth / image.width
     const imageToScreenY = screenHeight / image.height
-
 
     return visionResp.map(item => ({
       ...item,
@@ -109,7 +118,7 @@ export const CameraScreen: React.FunctionComponent<CameraScreenProps> = props =>
     }))
   }
 
-  const testTakePicture = React.useMemo(
+  const takePicture = React.useMemo(
     () => async () => {
       if (!camera.current || !cameraLayout) return
 
@@ -119,6 +128,9 @@ export const CameraScreen: React.FunctionComponent<CameraScreenProps> = props =>
         return
       }
 
+      setImageData(data)
+
+      console.tron.log(data)
       // Process image
       const visionResp = await RNTextDetector.detectFromUri(data.uri)
       console.tron.log(visionResp)
@@ -136,25 +148,22 @@ export const CameraScreen: React.FunctionComponent<CameraScreenProps> = props =>
     <View style={FULL}>
       <Screen style={CONTAINER} preset="fixed" backgroundColor={color.transparent}>
         <View>
-          <Header
-            leftIcon="signout"
-            onLeftPress={goBack}
-            style={HEADER}
-            titleStyle={HEADER_TITLE}
-          />
-          <View style={CAMERA_BORDER} onLayout={(e)=> setCameraLayout(e.nativeEvent.layout)}>
-            <Camera
-              ref={camera}
-              key="camera"
-              style={CAMERA}
-              notAuthorizedView={null}
-              playSoundOnCapture
-            />
-            {visionData.map(item => (
-              <TouchableOpacity style={[VISION_RECT, item.position]} key={item.text} >
-                <Text>
-                  {item.text}
-                </Text>
+          <Header leftIcon="signout" onLeftPress={goBack} />
+          <View style={CAMERA_BORDER} onLayout={e => setCameraLayout(e.nativeEvent.layout)}>
+            {!imageData ? (
+              <Camera
+                ref={camera}
+                key="camera"
+                style={CAMERA}
+                notAuthorizedView={null}
+                playSoundOnCapture
+              />
+            ) : (
+              <Image style={CAMERA_PREVIEW} source={imageData} />
+            )}
+            {visionData.map((item, i) => (
+              <TouchableOpacity style={[VISION_RECT, item.position]} key={item.text + i}>
+                <Text preset="light">{item.text}</Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -163,12 +172,32 @@ export const CameraScreen: React.FunctionComponent<CameraScreenProps> = props =>
 
       <SafeAreaView>
         <View style={FOOTER_CONTENT}>
-          <Button
-            style={CONTINUE}
-            textStyle={CONTINUE_TEXT}
-            tx="expenseScreen.takePicture"
-            onPress={testTakePicture}
-          />
+          {imageData && (
+            <>
+              <Button
+                style={CONTINUE}
+                preset="idle"
+                onPress={() => {
+                  setImageData(null)
+                  setVisionData([])
+                }}
+              >
+                <RepeatIcon style={ICON} />
+              </Button>
+              <Button
+                style={CONTINUE}
+                preset="submit"
+                onPressOut={uploadImage}
+              >
+                <CheckIcon style={ICON} />
+              </Button>
+            </>
+          )}
+          {!imageData && (
+            <Button style={CONTINUE} onPress={takePicture}>
+              <SnapIcon style={ICON} />
+            </Button>
+          )}
         </View>
       </SafeAreaView>
     </View>

@@ -54,7 +54,7 @@ export const TextField: React.FunctionComponent<TextFieldProps> = props => {
   return (
     <View style={containerStyle}>
       <Text preset="fieldLabel" tx={labelTx} text={label} />
-      <TextInput
+      <TextInput 
         placeholder={actualPlaceholder}
         placeholderTextColor={color.palette.lighterGrey}
         underlineColorAndroid={color.transparent}

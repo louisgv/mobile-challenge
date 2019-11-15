@@ -10,13 +10,19 @@ import { translate } from "../../i18n/"
 // static styles
 const ROOT: ViewStyle = {
   flexDirection: "row",
-  paddingHorizontal: spacing[4],
   alignItems: "center",
-  paddingTop: spacing[5],
-  paddingBottom: spacing[5],
+  padding: spacing[4],
   justifyContent: "flex-start",
+  elevation: 1,
 }
-const TITLE: TextStyle = { textAlign: "center" }
+
+const TITLE: TextStyle = {
+  fontSize: 12,
+  lineHeight: 15,
+  textAlign: "center",
+  letterSpacing: 1.5,
+}
+
 const TITLE_MIDDLE: ViewStyle = { flex: 1, justifyContent: "center" }
 const LEFT: ViewStyle = { width: 32 }
 const RIGHT: ViewStyle = { width: 32 }
@@ -47,7 +53,7 @@ export const Header: React.FunctionComponent<HeaderProps> = props => {
         <View style={LEFT} />
       )}
       <View style={TITLE_MIDDLE}>
-        <Text style={{ ...TITLE, ...titleStyle }} text={header} />
+        <Text style={{ ...TITLE, ...titleStyle }} preset="header" text={header} />
       </View>
       {rightIcon ? (
         <Button preset="link" onPress={onRightPress}>

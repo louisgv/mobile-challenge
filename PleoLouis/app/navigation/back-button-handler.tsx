@@ -2,7 +2,7 @@ import { FunctionComponent, useEffect } from "react"
 import { BackHandler } from "react-native"
 import { observer } from "mobx-react-lite"
 import { NavigationActions } from "react-navigation"
-import { useStores } from "../models/root-store"
+import { useStore } from "../models/root-store"
 
 interface BackButtonHandlerProps {
   /**
@@ -12,7 +12,7 @@ interface BackButtonHandlerProps {
 }
 
 export const BackButtonHandler: FunctionComponent<BackButtonHandlerProps> = observer(props => {
-  const { navigationStore } = useStores()
+  const { navigationStore } = useStore()
 
   useEffect(() => {
     // We'll fire this when the back button is pressed on Android.

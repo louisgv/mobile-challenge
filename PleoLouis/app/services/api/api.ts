@@ -45,11 +45,13 @@ export class Api {
   }
 
   /**
-   * Gets a list of users.
+   * Gets all availble expense.
    */
-  async getExpenses(): Promise<Types.GetExpensesResult> {
+  async getExpenses(offset = 0, limit = 25): Promise<Types.GetExpensesResult> {
     // make the api call
-    const response: ApiResponse<any> = await this.apisauce.get(`/expenses`)
+    const response: ApiResponse<any> = await this.apisauce.get(
+      `/expenses?offset=${offset}&limit=${limit}`,
+    )
 
     // the typical ways to die when calling an api
     if (!response.ok) {
@@ -60,17 +62,24 @@ export class Api {
     // transform the data into the format we are expecting
     try {
       const rawExpenses = response.data
+
       return { kind: "ok", ...rawExpenses } as Types.GetExpensesResult
     } catch {
       return { kind: "bad-data" }
     }
   }
 
+  async setExpenseComment(id: string, comment: string) {
+    await this.apisauce.post(`/expenses/${id}`, {
+      comment,
+    })
+  }
+
   /**
-   * Gets a single user by ID
+   * Gets a single expense by ID
    */
 
-  async getUser(id: string): Promise<Types.GetExpenseResult> {
+  async getExpense(id: string): Promise<Types.GetExpenseResult> {
     // make the api call
     // const response: ApiResponse<any> = await this.apisauce.get(`/users/${id}`)
 
@@ -91,8 +100,8 @@ export class Api {
     //   return { kind: "bad-data" }
     // }
     return {
-      kind: 'unknown',
-      temporary: true
+      kind: "unknown",
+      temporary: true,
     }
   }
 }

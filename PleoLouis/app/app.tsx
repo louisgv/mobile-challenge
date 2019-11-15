@@ -51,7 +51,7 @@ const canExit = (routeName: string) => contains(routeName, exitRoutes)
 /**
  * This is the root component of our app.
  */
-export const App: React.FunctionComponent<{}> = () => {
+export const App: React.FC<{}> = () => {
   const [rootStore, setRootStore] = useState<RootStore | undefined>(undefined)
   useEffect(() => {
     setupRootStore().then(setRootStore)

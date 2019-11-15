@@ -16,7 +16,5 @@ export const RootStoreProvider = RootStoreContext.Provider
 
 /**
  * A hook that screens can use to gain access to our stores, with
- * `const { someStore, someOtherStore } = useStores()`,
- * or less likely: `const rootStore = useStores()`
  */
-export const useStores = () => useContext(RootStoreContext)
+export const useStore = () => useContext(RootStoreContext)

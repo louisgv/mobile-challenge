@@ -1,0 +1,8 @@
+<svg viewBox="0 0 24 24" height="48" width="48" focusable="false" role="img" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="StyledIconBase-sc-bdy9j4 jbPeIR">
+    <title>
+        ArrowRightCircle icon
+    </title>
+    <circle cx="12" cy="12" r="10"/>
+    <polyline points="12 16 16 12 12 8"/>
+    <line x1="8" x2="16" y1="12" y2="12"/>
+</svg>
