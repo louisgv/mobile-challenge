@@ -4,77 +4,186 @@ import {
   TextStyle,
   View,
   ViewStyle,
+  FlatList,
+  ImageStyle,
+  StyleSheet,
 } from "react-native"
 import { NavigationScreenProps } from "react-navigation"
 import { Screen } from "../../components/screen"
 import { Button } from "../../components/button"
 import { Header } from "../../components/header"
 import { color, spacing } from "../../theme"
+import { useStore } from "../../models/root-store"
+import { Text } from "../../components/text"
+import { ExpenseCard } from "../../components/expense-card"
+import { Expense } from "../../models/expense"
+import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view"
+
+import ArrowLeft from "./arrow-left-circle.svg"
+import ArrowRight from "./arrow-right-circle.svg"
+import CrossCircle from "./x-circle.svg"
+import MinusCircle from "./minus-circle.svg"
+
+import { useObservable, useObserver, observer, useComputed } from "mobx-react-lite"
 
 const FULL: ViewStyle = { flex: 1 }
-const CONTAINER: ViewStyle = {
-  backgroundColor: color.transparent,
-  paddingHorizontal: spacing[4],
+
+const EXPENSE_LIST: ViewStyle = {
+  flex: 1,
+  flexGrow: 1,
 }
 
-const HEADER: TextStyle = {
-  paddingTop: spacing[3],
-  paddingBottom: spacing[5] - 1,
-  paddingHorizontal: 0,
-}
-const HEADER_TITLE: TextStyle = {
-  fontSize: 12,
-  lineHeight: 15,
-  textAlign: "center",
-  letterSpacing: 1.5,
-}
-const FOOTER_CONTENT: ViewStyle = {
-  paddingVertical: spacing[4],
-  paddingHorizontal: spacing[4],
+const PAGE_INDEX_WRAPPER_CONTAINER: ViewStyle = {
+  flex: 1,
+  position: "absolute",
+  bottom: 20,
+  width: "100%",
+  alignItems: "center",
+  zIndex: 10,
 }
 
-const CONTINUE: ViewStyle = {
+const PAGE_INDEX_CONTAINER: ViewStyle = {
+  flex: 1,
+  width: 200,
+  flexDirection: "row",
+  alignItems: "center",
+  justifyContent: "space-between",
+}
+
+const PAGE_INDEX: ViewStyle = {
+  // flex: 1,
+  backgroundColor: color.palette.hotpink,
+  alignItems: "center",
+  justifyContent: "center",
+
+  width: 100,
+  height: 44,
+
+  borderRadius: 20,
+}
+
+const ACTION_BUTTON: ViewStyle = {
+  width: 44,
+  height: 44,
+  // backgroundColor: color.transparent,
+  // borderColor: color.palette.hotpink,
+  // borderWidth: 1,
+}
+
+const ICON: ImageStyle & TextStyle = {
   alignSelf: "center",
-  width: "80%",
-  paddingVertical: spacing[4],
-  paddingHorizontal: spacing[4],
+  marginVertical: spacing[5],
+  maxWidth: "90%",
+  // color: color.palette.hotpink,
+  color: color.palette.white,
 }
-const CONTINUE_TEXT: TextStyle = {
-  fontSize: 18,
-  fontWeight: "400",
-  fontFamily: "Roboto",
-  letterSpacing: 0.8,
-}
+
+const BUTTON_STYLE = StyleSheet.create({
+  active: {
+    ...ACTION_BUTTON,
+    opacity: 1.0,
+  },
+  disabled: {
+    ...ACTION_BUTTON,
+    opacity: 0.5,
+  },
+})
+
+const PageIndexSwitcher = observer(() => {
+  const { isFirstPage, isLastPage, fetching, pageIndex, pageTotal, getExpense } = useStore()
+
+  const previousButtonStyle = useComputed(
+    () => (isFirstPage ? BUTTON_STYLE.disabled : BUTTON_STYLE.active),
+    [isFirstPage],
+  )
+
+  const nextButtonStyle = useComputed(
+    () => (isLastPage ? BUTTON_STYLE.disabled : BUTTON_STYLE.active),
+    [isLastPage],
+  )
+
+  return (
+    <View style={PAGE_INDEX_WRAPPER_CONTAINER}>
+      <View style={PAGE_INDEX_CONTAINER}>
+        <Button
+          style={previousButtonStyle}
+          onPressOut={e => {
+            if (fetching) return
+            if (pageIndex > 0) getExpense(-1)
+          }}
+        >
+          {fetching && <MinusCircle style={ICON} />}
+          {isFirstPage && <CrossCircle style={ICON} />}
+          {!(isFirstPage || fetching) && <ArrowLeft style={ICON} />}
+        </Button>
+
+        <View style={PAGE_INDEX}>
+          <Text preset="light">
+            {pageIndex + 1}/{pageTotal + 1}
+          </Text>
+        </View>
+
+        <Button
+          style={nextButtonStyle}
+          onPressOut={() => {
+            if (fetching) return
+            if (pageIndex < pageTotal) getExpense(1)
+          }}
+        >
+          {isLastPage && <CrossCircle style={ICON} />}
+          {fetching && <MinusCircle style={ICON} />}
+          {!(isLastPage || fetching) && <ArrowRight style={ICON} />}
+        </Button>
+      </View>
+    </View>
+  )
+})
+
+const ExpenseList: React.FC<ExpenseScreenProps> = observer(props => {
+  const goToCameraScreen = React.useMemo(
+    () => expenseData => props.navigation.navigate("camera", { expenseData }),
+    [props.navigation],
+  )
+  const { expenses, setComment } = useStore()
+
+  return (
+    <SafeAreaView style={EXPENSE_LIST}>
+      {expenses.length > 0 && (
+        <KeyboardAwareFlatList
+          data={expenses}
+          contentContainerStyle={{
+            paddingBottom: 36,
+          }}
+          keyExtractor={p => p.id}
+          renderItem={({ item }) => (
+            <ExpenseCard
+              data={item as Expense}
+              onSubmitComment={comment => {
+                setComment(item, comment)
+              }}
+              onPressCamera={goToCameraScreen}
+            />
+          )}
+        />
+      )}
+    </SafeAreaView>
+  )
+})
 
 export interface ExpenseScreenProps extends NavigationScreenProps<{}> {}
 
-export const ExpenseScreen: React.FunctionComponent<ExpenseScreenProps> = props => {
+export const ExpenseScreen: React.FC<ExpenseScreenProps> = props => {
   const goBack = React.useMemo(() => () => props.navigation.goBack(null), [props.navigation])
-  const goToCameraScreen = React.useMemo(() => () => props.navigation.navigate("camera"), [props.navigation])
+
+  // const [pageIndex, setPageIndex] = React.useState(Math.floor(expenses[0].index / pageTotal))
 
   return (
-    <View style={FULL}>
-      <Screen style={CONTAINER} preset="fixed" backgroundColor={color.transparent}>
-        <View>
-          <Header
-            leftIcon="signout"
-            onLeftPress={goBack}
-            style={HEADER}
-            titleStyle={HEADER_TITLE}
-          />
-        </View>
-      </Screen>
+    <Screen style={FULL}>
+      <Header leftIcon="signout" onLeftPress={goBack} headerText="Expenses" />
 
-      <SafeAreaView>
-        <View style={FOOTER_CONTENT}>
-          <Button
-            style={CONTINUE}
-            textStyle={CONTINUE_TEXT}
-            tx="expenseScreen.takePicture"
-            onPress={goToCameraScreen}
-          />
-        </View>
-      </SafeAreaView>
-    </View>
+      <PageIndexSwitcher />
+
+      <ExpenseList {...props} />
+    </Screen>
   )
 }

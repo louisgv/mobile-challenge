@@ -1,7 +1,7 @@
 import { GeneralApiProblem } from "./api-problem"
 
 export interface Expense {
-  id: number
+  id: string
   amount: {
     value: string
     currency: string

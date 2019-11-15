@@ -28,6 +28,10 @@ export const viewPresets = {
    */
   primary: { ...BASE_VIEW, backgroundColor: color.palette.hotpink } as ViewStyle,
 
+  submit: { ...BASE_VIEW, backgroundColor: color.palette.green } as ViewStyle,
+
+  idle: { ...BASE_VIEW, backgroundColor: color.palette.blue } as ViewStyle,
+
   /**
    * A button without extras.
    */
@@ -41,6 +45,11 @@ export const viewPresets = {
 
 export const textPresets = {
   primary: { ...BASE_TEXT, fontSize: 9, color: color.palette.white } as TextStyle,
+
+  submit: { ...BASE_TEXT, fontSize: 9, color: color.palette.white } as TextStyle,
+
+  idle: { ...BASE_TEXT, fontSize: 9, color: color.palette.white } as TextStyle,
+
   link: {
     ...BASE_TEXT,
     color: color.text,

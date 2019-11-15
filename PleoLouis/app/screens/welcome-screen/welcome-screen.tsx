@@ -1,4 +1,4 @@
-import * as React from "react"
+import React from "react"
 import { View, ViewStyle, TextStyle, ImageStyle, SafeAreaView } from "react-native"
 
 import { NavigationScreenProps } from "react-navigation"
@@ -59,7 +59,7 @@ const FOOTER_CONTENT: ViewStyle = {
 
 export interface WelcomeScreenProps extends NavigationScreenProps<{}> {}
 
-export const WelcomeScreen: React.FunctionComponent<WelcomeScreenProps> = props => {
+export const WelcomeScreen: React.FC<WelcomeScreenProps> = props => {
   const nextScreen = React.useMemo(() => () => props.navigation.navigate("expense"), [
     props.navigation,
   ])
