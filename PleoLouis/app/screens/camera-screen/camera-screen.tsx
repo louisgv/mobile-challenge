@@ -93,14 +93,15 @@ export const CameraScreen: React.FunctionComponent<CameraScreenProps> = props =>
 
   const goBack = React.useMemo(() => () => props.navigation.goBack(null), [props.navigation])
 
-  const {} = useStore()
-  
+  const { addReceipt } = useStore()
+
   const [imageData, setImageData] = React.useState()
   const [visionData, setVisionData] = React.useState([])
   const [cameraLayout, setCameraLayout] = React.useState<LayoutRectangle>()
 
   const uploadImage = async () => {
-
+    await addReceipt(expenseData, imageData)
+    goBack()
   }
 
   const getUpdatedVisionData = (visionResp, image: TakePictureResponse) => {
@@ -184,11 +185,7 @@ export const CameraScreen: React.FunctionComponent<CameraScreenProps> = props =>
               >
                 <RepeatIcon style={ICON} />
               </Button>
-              <Button
-                style={CONTINUE}
-                preset="submit"
-                onPressOut={uploadImage}
-              >
+              <Button style={CONTINUE} preset="submit" onPressOut={uploadImage}>
                 <CheckIcon style={ICON} />
               </Button>
             </>

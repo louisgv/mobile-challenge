@@ -29,8 +29,11 @@ export const RootStoreModel = types
     },
     setComment: (expense, comment) => {
       const { api } = getEnv<Environment>(self)
-
-      const response = api.setExpenseComment(expense.id, comment)
+      api.setExpenseComment(expense.id, comment)
+    },
+    addReceipt: (expense, imageData) => {
+      const { api } = getEnv<Environment>(self)
+      return api.addReceiptImage(expense.id, imageData)
     },
     setPageIndex: (pageIndex = 0) => {
       self.pageIndex = pageIndex
