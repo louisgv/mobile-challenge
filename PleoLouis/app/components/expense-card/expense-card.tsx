@@ -1,16 +1,6 @@
-import * as React from "react"
-import {
-  TouchableOpacity,
-  View,
-  ViewStyle,
-  Linking,
-  TextStyle,
-  ImageStyle,
-  Image,
-} from "react-native"
-import { viewPresets, textPresets } from "./expense-card.presets"
+import React, { useState } from "react"
+import { View, ViewStyle, Linking, TextStyle, ImageStyle, Image } from "react-native"
 import { CardProps } from "./expense-card.props"
-import { mergeAll, flatten } from "ramda"
 import { spacing, color } from "../../theme"
 import { TextField } from "../text-field"
 import { Button } from "../button"
@@ -18,6 +8,8 @@ import { ExpenseDetail } from "./expense-detail"
 
 import MailIcon from "./mail-icon.svg"
 import CameraIcon from "./camera-icon.svg"
+
+import Carousel from "react-native-snap-carousel"
 
 const EXPENSE_CONTAINER: ViewStyle = {
   margin: spacing[4],
@@ -52,6 +44,11 @@ const ACTION_BUTTON: ViewStyle = {
   // borderWidth: 1,
 }
 
+const CAROUSEL_CONTAINER: ViewStyle = {
+  paddingBottom: spacing[4],
+  alignItems: "center"
+}
+
 const ICON: ImageStyle & TextStyle = {
   alignSelf: "center",
   marginVertical: spacing[5],
@@ -61,36 +58,45 @@ const ICON: ImageStyle & TextStyle = {
 }
 
 const IMAGE: ImageStyle = {
-  width: 100,
+  width: "100%",
   height: 100,
+  borderRadius: 15,
 }
 
 /**
  * To display an expense item.
  *
  */
-export function ExpenseCard({ data, onPressCamera, onSubmitComment }: CardProps) {
+export function ExpenseCard({ data, baseUrl, onPressCamera, onSubmitComment }: CardProps) {
   const { receipts } = data
   const { email } = data.user
-  const [draftComment, setDraftComment] = React.useState(data.comment)
+  const [draftComment, setDraftComment] = useState(data.comment)
+
+  const [cardWidth, setCardWidth] = useState(360)
 
   React.useEffect(() => {
     setDraftComment(data.comment)
   }, [data.comment])
 
   return (
-    <View style={EXPENSE_CONTAINER}>
-      <View>
-      {receipts.map(r => (
-          <Image
-            style={IMAGE}
-            source={{
-              uri: `http://localhost:3000${r.url}`,
-            }}
+    <View style={EXPENSE_CONTAINER} onLayout={e => setCardWidth(e.nativeEvent.layout.width)}>
+      {receipts.length > 0 && (
+        <View style={CAROUSEL_CONTAINER}>
+          <Carousel
+            data={[...receipts]}
+            sliderWidth={cardWidth * 0.9}
+            itemWidth={cardWidth* 0.9}
+            renderItem={({ item, index }) => (
+              <Image
+                style={IMAGE}
+                source={{
+                  uri: `${baseUrl}${item.url}`,
+                }}
+              />
+            )}
           />
-        ))}
-
-      </View>
+        </View>
+      )}
 
       <View style={EXPENSE_TOP_CONTAINER}>
         <View style={DETAIL_CONTAINER}>
@@ -110,14 +116,6 @@ export function ExpenseCard({ data, onPressCamera, onSubmitComment }: CardProps)
           </Button>
         </View>
       </View>
-      {/* 
-      <Button
-        onPressOut={() => {
-          Linking.openURL(`mailto:${email}`)
-        }}
-        text="Mail"
-      /> 
-      */}
 
       <TextField
         multiline

@@ -1,7 +1,7 @@
-import { Instance, SnapshotOut, types, getEnv } from "mobx-state-tree"
+import { Instance, SnapshotOut, types } from "mobx-state-tree"
 import { NavigationStoreModel } from "../../navigation/navigation-store"
 import { ExpenseModel, ExpenseSnapshot } from "../expense"
-import { Environment } from "../environment"
+import { withEnvironment } from "../extensions"
 
 /**
  * A RootStore model.
@@ -15,6 +15,7 @@ export const RootStoreModel = types
     pageIndex: types.optional(types.number, 0),
     fetching: types.optional(types.boolean, false),
   })
+  .extend(withEnvironment)
   .views(self => ({
     get isFirstPage() {
       return self.pageIndex === 0
@@ -28,11 +29,11 @@ export const RootStoreModel = types
       self.expenses.replace(expenses as any)
     },
     setComment: (expense, comment) => {
-      const { api } = getEnv<Environment>(self)
+      const { api } = self.environment
       api.setExpenseComment(expense.id, comment)
     },
     addReceipt: (expense, imageData) => {
-      const { api } = getEnv<Environment>(self)
+      const { api } = self.environment
       return api.addReceiptImage(expense.id, imageData)
     },
     setPageIndex: (pageIndex = 0) => {
@@ -48,7 +49,7 @@ export const RootStoreModel = types
   .actions(self => ({
     getExpense: async (offset = 0) => {
       const itemPerPage = 25
-      const { api } = getEnv<Environment>(self)
+      const { api } = self.environment
       const newPageIndex = self.pageIndex + offset
 
       self.setFetching(true)
@@ -63,6 +64,9 @@ export const RootStoreModel = types
     },
   }))
   .actions(self => ({
+    refresh: async() => {
+      self.getExpense(self.pageIndex)
+    },
     init: async () => {
       self.getExpense(0)
     },

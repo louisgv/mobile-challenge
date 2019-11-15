@@ -1,7 +1,9 @@
+import LogOut from "./logout.svg"
+import LeftArrow from "./arrow-left-circle.svg"
+
 export const icons = {
-  back: require("./arrow-left.png"),
-  bullet: require("./bullet.png"),
-  signout: require("./signout.png")
+  back: LeftArrow,
+  signout: LogOut,
 }
 
 export type IconTypes = keyof typeof icons

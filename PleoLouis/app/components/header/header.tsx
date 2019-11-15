@@ -12,6 +12,7 @@ const ROOT: ViewStyle = {
   flexDirection: "row",
   alignItems: "center",
   padding: spacing[4],
+  paddingVertical: 0,
   justifyContent: "flex-start",
   elevation: 1,
 }
@@ -40,6 +41,7 @@ export const Header: React.FunctionComponent<HeaderProps> = props => {
     headerTx,
     style,
     titleStyle,
+    rightChildren,
   } = props
   const header = headerText || (headerTx && translate(headerTx)) || ""
 
@@ -62,6 +64,7 @@ export const Header: React.FunctionComponent<HeaderProps> = props => {
       ) : (
         <View style={RIGHT} />
       )}
+      {rightChildren}
     </View>
   )
 }
