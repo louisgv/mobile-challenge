@@ -15,7 +15,7 @@ export interface HeaderProps {
   /**
    * Icon that should appear on the left
    */
-  leftIcon?: IconTypes
+  leftIcon?: IconTypes | null
 
   /**
    * What happens when you press the left icon
@@ -41,4 +41,6 @@ export interface HeaderProps {
    * Title style overrides.
    */
   titleStyle?: TextStyle
+
+  rightChildren?: React.ReactNode
 }

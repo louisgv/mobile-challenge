@@ -1,4 +1,4 @@
-import * as React from "react"
+import React, { useState } from "react"
 import {
   SafeAreaView,
   TextStyle,
@@ -8,6 +8,7 @@ import {
   LayoutRectangle,
   ImageStyle,
   Image,
+  ActivityIndicator,
 } from "react-native"
 import { NavigationScreenProps } from "react-navigation"
 import { Screen } from "../../components/screen"
@@ -35,7 +36,8 @@ const PICTURE_OPTIONS = {
 const FULL: ViewStyle = { flex: 1 }
 const CONTAINER: ViewStyle = {
   backgroundColor: color.transparent,
-  paddingHorizontal: spacing[4],
+  padding: spacing[4],
+
 }
 
 const FOOTER_CONTENT: ViewStyle = {
@@ -47,7 +49,7 @@ const FOOTER_CONTENT: ViewStyle = {
 
 const CAMERA_BORDER: ViewStyle = {
   borderRadius: 15,
-  height: "90%",
+  height: "100%",
   overflow: "hidden",
 }
 
@@ -93,14 +95,18 @@ export const CameraScreen: React.FunctionComponent<CameraScreenProps> = props =>
 
   const goBack = React.useMemo(() => () => props.navigation.goBack(null), [props.navigation])
 
-  const { addReceipt } = useStore()
+  const { addReceipt, refresh } = useStore()
 
-  const [imageData, setImageData] = React.useState()
-  const [visionData, setVisionData] = React.useState([])
-  const [cameraLayout, setCameraLayout] = React.useState<LayoutRectangle>()
+  const [imageData, setImageData] = useState()
+  const [visionData, setVisionData] = useState([])
+  const [cameraLayout, setCameraLayout] = useState<LayoutRectangle>()
+
+  const [uploading, setUploading] = useState(false)
 
   const uploadImage = async () => {
+    setUploading(true)
     await addReceipt(expenseData, imageData)
+    await refresh()
     goBack()
   }
 
@@ -147,9 +153,9 @@ export const CameraScreen: React.FunctionComponent<CameraScreenProps> = props =>
 
   return (
     <View style={FULL}>
+      <Header leftIcon={uploading ? null : "back"} headerTx="cameraScreen.title" onLeftPress={goBack} />
       <Screen style={CONTAINER} preset="fixed" backgroundColor={color.transparent}>
         <View>
-          <Header leftIcon="signout" onLeftPress={goBack} />
           <View style={CAMERA_BORDER} onLayout={e => setCameraLayout(e.nativeEvent.layout)}>
             {!imageData ? (
               <Camera
@@ -173,7 +179,8 @@ export const CameraScreen: React.FunctionComponent<CameraScreenProps> = props =>
 
       <SafeAreaView>
         <View style={FOOTER_CONTENT}>
-          {imageData && (
+          {uploading && <ActivityIndicator size="large" color={color.palette.green} />}
+          {imageData && !uploading && (
             <>
               <Button
                 style={CONTINUE}
