@@ -75,6 +75,29 @@ export class Api {
     })
   }
 
+  async addReceiptImage(id: string, receipt) {
+    const formBody = new FormData()
+    formBody.append("receipt", {
+      ...receipt,
+      name: receipt.uri.split(/[\\/]/).pop(),
+      type: 'image/jpg'
+    })
+
+    try {
+      return await fetch(`${this.config.url}/expenses/${id}/receipts`, {
+        method: "POST",
+        body: formBody,
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Accept: 'application/json'  
+        },
+      })
+    } catch (error) {
+      console.tron.error(error)
+      return null
+    }
+  }
+
   /**
    * Gets a single expense by ID
    */
