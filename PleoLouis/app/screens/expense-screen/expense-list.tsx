@@ -18,13 +18,25 @@ export const ExpenseList: React.FC<ExpenseScreenProps> = observer(props => {
     () => expenseData => props.navigation.navigate("camera", { expenseData }),
     [props.navigation],
   )
-  const { expenses, setComment, environment } = useStore()
+  const { expenses, setComment, environment, filterQuery } = useStore()
 
   return (
     <SafeAreaView style={EXPENSE_LIST}>
       {expenses.length > 0 && (
         <KeyboardAwareFlatList
-          data={expenses}
+          data={expenses.filter(
+            e =>
+              filterQuery.length === 0 ||
+              [
+                e.comment,
+                e.user.email,
+                e.user.first,
+                e.user.last,
+                e.merchant,
+                e.amount.value.toString(),
+                e.amount.currency.toString(),
+              ].filter(s => s.toLowerCase().includes(filterQuery.toLowerCase())).length > 0,
+          )}
           contentContainerStyle={{
             paddingBottom: 36,
           }}

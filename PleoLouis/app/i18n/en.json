@@ -16,7 +16,8 @@
   "expenseScreen": {
     "title": "Expenses",
     "takePicture": "SNAP",
-    "pay": "paid"
+    "pay": "paid",
+    "filter": "Filter query..."
   },
   "cameraScreen": {
     "title": "+Receipt"
