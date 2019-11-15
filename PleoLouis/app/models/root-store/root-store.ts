@@ -14,6 +14,7 @@ export const RootStoreModel = types
     pageTotal: types.optional(types.number, 0),
     pageIndex: types.optional(types.number, 0),
     fetching: types.optional(types.boolean, false),
+    filterQuery: types.optional(types.string, ""),
   })
   .extend(withEnvironment)
   .views(self => ({
@@ -22,7 +23,7 @@ export const RootStoreModel = types
     },
     get isLastPage() {
       return self.pageIndex === self.pageTotal
-    }
+    },
   }))
   .actions(self => ({
     setExpenses: (expenses: ExpenseSnapshot[]) => {
@@ -45,6 +46,9 @@ export const RootStoreModel = types
     setFetching: fetching => {
       self.fetching = fetching
     },
+    setFilterQuery: (query = "") => {
+      self.filterQuery = query.toLowerCase()
+    },
   }))
   .actions(self => ({
     getExpense: async (offset = 0) => {
@@ -64,7 +68,7 @@ export const RootStoreModel = types
     },
   }))
   .actions(self => ({
-    refresh: async() => {
+    refresh: async () => {
       self.getExpense(self.pageIndex)
     },
     init: async () => {
