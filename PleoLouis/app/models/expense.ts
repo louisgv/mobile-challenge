@@ -11,12 +11,17 @@ const AmountModel = types.model().props({
   currency: types.string,
 })
 
+
+const ReceiptModel = types.model().props({
+  url: types.string
+})
+
 export const ExpenseModel = types.model().props({
   id: types.string,
   amount: AmountModel,
   date: types.string,
   merchant: types.string,
-  receipts: types.array(types.string),
+  receipts: types.array(ReceiptModel),
   comment: types.string,
   category: types.string,
   user: UserModel,
