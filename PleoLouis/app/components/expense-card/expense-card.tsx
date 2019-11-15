@@ -1,5 +1,13 @@
 import * as React from "react"
-import { TouchableOpacity, View, ViewStyle, Linking, TextStyle, ImageStyle } from "react-native"
+import {
+  TouchableOpacity,
+  View,
+  ViewStyle,
+  Linking,
+  TextStyle,
+  ImageStyle,
+  Image,
+} from "react-native"
 import { viewPresets, textPresets } from "./expense-card.presets"
 import { CardProps } from "./expense-card.props"
 import { mergeAll, flatten } from "ramda"
@@ -52,11 +60,17 @@ const ICON: ImageStyle & TextStyle = {
   color: color.palette.white,
 }
 
+const IMAGE: ImageStyle = {
+  width: 100,
+  height: 100,
+}
+
 /**
  * To display an expense item.
  *
  */
 export function ExpenseCard({ data, onPressCamera, onSubmitComment }: CardProps) {
+  const { receipts } = data
   const { email } = data.user
   const [draftComment, setDraftComment] = React.useState(data.comment)
 
@@ -66,6 +80,18 @@ export function ExpenseCard({ data, onPressCamera, onSubmitComment }: CardProps)
 
   return (
     <View style={EXPENSE_CONTAINER}>
+      <View>
+      {receipts.map(r => (
+          <Image
+            style={IMAGE}
+            source={{
+              uri: `http://localhost:3000${r.url}`,
+            }}
+          />
+        ))}
+
+      </View>
+
       <View style={EXPENSE_TOP_CONTAINER}>
         <View style={DETAIL_CONTAINER}>
           <ExpenseDetail data={data} />
