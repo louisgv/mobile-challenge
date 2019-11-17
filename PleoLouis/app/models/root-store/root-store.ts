@@ -69,7 +69,7 @@ export const RootStoreModel = types
   }))
   .actions(self => ({
     refresh: async () => {
-      self.getExpense(self.pageIndex)
+      self.getExpense(0)
     },
     init: async () => {
       self.getExpense(0)
