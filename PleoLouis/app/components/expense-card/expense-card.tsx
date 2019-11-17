@@ -1,15 +1,13 @@
 import React, { useState } from "react"
-import { View, ViewStyle, Linking, TextStyle, ImageStyle, Image } from "react-native"
+import { View, ViewStyle, Linking, ImageStyle, Image } from "react-native"
 import { CardProps } from "./expense-card.props"
 import { spacing, color } from "../../theme"
 import { TextField } from "../text-field"
 import { Button } from "../button"
 import { ExpenseDetail } from "./expense-detail"
 
-import MailIcon from "./mail-icon.svg"
-import CameraIcon from "./camera-icon.svg"
-
 import Carousel from "react-native-snap-carousel"
+import { Icon } from "../icon"
 
 const EXPENSE_CONTAINER: ViewStyle = {
   margin: spacing[4],
@@ -47,14 +45,6 @@ const ACTION_BUTTON: ViewStyle = {
 const CAROUSEL_CONTAINER: ViewStyle = {
   paddingBottom: spacing[4],
   alignItems: "center"
-}
-
-const ICON: ImageStyle & TextStyle = {
-  alignSelf: "center",
-  marginVertical: spacing[5],
-  maxWidth: "90%",
-  // color: color.palette.hotpink,
-  color: color.palette.white,
 }
 
 const IMAGE: ImageStyle = {
@@ -104,7 +94,7 @@ export function ExpenseCard({ data, baseUrl, onPressCamera, onSubmitComment }: C
         </View>
         <View style={ACTION_CONTAINER}>
           <Button style={ACTION_BUTTON} onPressOut={() => onPressCamera(data)}>
-            <CameraIcon style={ICON} />
+            <Icon preset="action" icon="camera"/>
           </Button>
           <Button
             style={ACTION_BUTTON}
@@ -112,7 +102,7 @@ export function ExpenseCard({ data, baseUrl, onPressCamera, onSubmitComment }: C
               Linking.openURL(`mailto:${email}`)
             }}
           >
-            <MailIcon style={ICON} />
+            <Icon preset="action" icon="mail"/>
           </Button>
         </View>
       </View>

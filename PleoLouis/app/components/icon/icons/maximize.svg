@@ -1,8 +1,9 @@
 <svg viewBox="0 0 24 24" height="48" width="48" focusable="false" role="img" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="StyledIconBase-sc-bdy9j4 jbPeIR">
     <title>
-        ArrowLeftCircle icon
+        Maximize2 icon
     </title>
-    <circle cx="12" cy="12" r="10"/>
-    <polyline points="12 8 8 12 12 16"/>
-    <line x1="16" x2="8" y1="12" y2="12"/>
+    <polyline points="15 3 21 3 21 9"/>
+    <polyline points="9 21 3 21 3 15"/>
+    <line x1="21" x2="14" y1="3" y2="10"/>
+    <line x1="3" x2="10" y1="21" y2="14"/>
 </svg>

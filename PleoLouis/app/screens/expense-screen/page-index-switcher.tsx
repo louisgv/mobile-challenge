@@ -1,15 +1,13 @@
 import React from "react"
 
-import { TextStyle, View, ViewStyle, ImageStyle, StyleSheet } from "react-native"
+import { View, ViewStyle, StyleSheet } from "react-native"
 import { Button } from "../../components/button"
-import { color, spacing } from "../../theme"
+import { color } from "../../theme"
 import { useStore } from "../../models/root-store"
 import { Text } from "../../components/text"
-import ArrowLeft from "./arrow-left-circle.svg"
-import ArrowRight from "./arrow-right-circle.svg"
-import CrossCircle from "./x-circle.svg"
-import MinusCircle from "./minus-circle.svg"
+
 import { observer, useComputed } from "mobx-react-lite"
+import { Icon } from "../../components/icon"
 
 const PAGE_INDEX_WRAPPER_CONTAINER: ViewStyle = {
   flex: 1,
@@ -39,13 +37,7 @@ const ACTION_BUTTON: ViewStyle = {
   width: 44,
   height: 44,
 }
-const ICON: ImageStyle & TextStyle = {
-  alignSelf: "center",
-  marginVertical: spacing[5],
-  maxWidth: "90%",
-  // color: color.palette.hotpink,
-  color: color.palette.white,
-}
+
 const BUTTON_STYLE = StyleSheet.create({
   active: {
     ...ACTION_BUTTON,
@@ -73,14 +65,15 @@ export const PageIndexSwitcher = observer(() => {
       <View style={PAGE_INDEX_CONTAINER}>
         <Button
           style={previousButtonStyle}
-          onPressOut={e => {
+          onPressOut={() => {
             if (fetching) return
             if (pageIndex > 0) getExpense(-1)
           }}
         >
-          {fetching && <MinusCircle style={ICON} />}
-          {isFirstPage && !fetching && <CrossCircle style={ICON} />}
-          {!(isFirstPage || fetching) && <ArrowLeft style={ICON} />}
+          <Icon
+            preset="action"
+            icon={fetching ? "minusCircle" : isFirstPage ? "crossCircle" : "back"}
+          />
         </Button>
 
         <View style={PAGE_INDEX}>
@@ -96,9 +89,10 @@ export const PageIndexSwitcher = observer(() => {
             if (pageIndex < pageTotal) getExpense(1)
           }}
         >
-          {fetching && <MinusCircle style={ICON} />}
-          {isLastPage && !fetching && <CrossCircle style={ICON} />}
-          {!(isLastPage || fetching) && <ArrowRight style={ICON} />}
+          <Icon
+            preset="action"
+            icon={fetching ? "minusCircle" : isLastPage ? "crossCircle" : "next"}
+          />
         </Button>
       </View>
     </View>
