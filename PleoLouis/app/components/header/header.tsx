@@ -13,8 +13,8 @@ const ROOT: ViewStyle = {
   alignItems: "center",
   padding: spacing[4],
   paddingVertical: 0,
-  justifyContent: "flex-start",
-  elevation: 1,
+  minHeight: 60,
+  justifyContent: "center",
 }
 
 const TITLE: TextStyle = {
@@ -25,8 +25,8 @@ const TITLE: TextStyle = {
 }
 
 const TITLE_MIDDLE: ViewStyle = { flex: 1, justifyContent: "center" }
-const LEFT: ViewStyle = { width: 32 }
-const RIGHT: ViewStyle = { width: 32 }
+const LEFT: ViewStyle = { width: 20 }
+const RIGHT: ViewStyle = { width: 20 }
 
 /**
  * Header that appears on many screens. Will hold navigation buttons and screen title.

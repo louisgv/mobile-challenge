@@ -35,7 +35,6 @@ const FULL: ViewStyle = { flex: 1 }
 const CONTAINER: ViewStyle = {
   backgroundColor: color.transparent,
   padding: spacing[4],
-
 }
 
 const FOOTER_CONTENT: ViewStyle = {
@@ -43,6 +42,7 @@ const FOOTER_CONTENT: ViewStyle = {
   paddingHorizontal: spacing[4],
   flexDirection: "row",
   justifyContent: "space-around",
+  height: 120
 }
 
 const CAMERA_BORDER: ViewStyle = {
@@ -70,18 +70,13 @@ const VISION_RECT: ViewStyle = {
   borderColor: color.palette.hotpink,
 }
 
-const CONTINUE: ViewStyle = {
+const ACTION_BUTTON: ViewStyle = {
   alignSelf: "center",
-  borderRadius: 50,
-  paddingVertical: spacing[4],
-  paddingHorizontal: spacing[4],
-}
-
-const ICON: ImageStyle & TextStyle = {
-  color: color.palette.white,
-  alignSelf: "center",
-  width: 44,
-  height: 44,
+  alignItems: "center",
+  justifyContent: "center",
+  width: 80,
+  height: 80,
+  borderRadius: 40
 }
 
 export interface CameraScreenProps extends NavigationScreenProps<{ expenseData?: Expense }> {}
@@ -181,7 +176,7 @@ export const CameraScreen: React.FunctionComponent<CameraScreenProps> = props =>
           {imageData && !uploading && (
             <>
               <Button
-                style={CONTINUE}
+                style={ACTION_BUTTON}
                 preset="idle"
                 onPress={() => {
                   setImageData(null)
@@ -190,13 +185,13 @@ export const CameraScreen: React.FunctionComponent<CameraScreenProps> = props =>
               >
                 <Icon preset="button" icon="repeat" />
               </Button>
-              <Button style={CONTINUE} preset="submit" onPressOut={uploadImage}>
+              <Button style={ACTION_BUTTON} preset="submit" onPressOut={uploadImage}>
                 <Icon preset="button" icon="check" />
               </Button>
             </>
           )}
           {!imageData && (
-            <Button style={CONTINUE} onPress={takePicture}>
+            <Button style={ACTION_BUTTON} onPress={takePicture}>
                 <Icon preset="button" icon="snap" />
             </Button>
           )}
