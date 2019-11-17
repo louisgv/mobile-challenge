@@ -1,36 +1,46 @@
 import * as React from "react"
-import { View, ImageStyle, TextStyle } from "react-native"
-import { IconProps } from "./icon.props"
-import { icons } from "./icons"
-import { color } from "../../theme"
+import { View, ViewStyle } from "react-native"
+import { icons, IconTypes } from "./icons"
+import { IconPresetNames, iconPresets } from "./icon.presets"
 
-const ROOT: ImageStyle & TextStyle = {
-  resizeMode: "contain",
-  maxWidth: 20,
-  color: color.palette.black,
+import { mergeAll, flatten } from "ramda"
+
+export interface IconProps {
+  style?: IconStyle
+  containerStyle?: ViewStyle
+  icon?: IconTypes
+  preset?: IconPresetNames
+  inverted?: boolean
 }
 
-export function Icon(props: IconProps) {
-  const { style: styleOverride, icon, containerStyle } = props
-  const style: ImageStyle = {
-    ...ROOT,
-    ...styleOverride,
-    ...(icon === "signout"
-      ? {
-          transform: [
-            {
-              rotateY: "180deg",
-            },
-          ],
-        }
-      : {}),
-  }
+export const Icon: React.FC<IconProps> = ({
+  style: styleOverride,
+  icon,
+  containerStyle,
+  inverted,
+  preset,
+}) => {
+  const iconStyle = mergeAll(
+    flatten([
+      iconPresets[preset] || iconPresets.primary,
+      inverted || icon === "signout"
+        ? {
+            transform: [
+              {
+                rotateY: "180deg",
+              },
+            ],
+          }
+        : {},
+      styleOverride,
+    ]),
+  )
 
   const Icon = icons[icon]
 
   return (
     <View style={containerStyle}>
-      <Icon style={style} />
+      <Icon style={iconStyle} />
     </View>
   )
 }

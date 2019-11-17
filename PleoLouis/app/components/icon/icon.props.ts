@@ -1,11 +1,12 @@
-import { ImageStyle, ViewStyle } from "react-native"
+import { ViewStyle } from "react-native"
 import { IconTypes } from "./icons"
+import { IconPresetNames } from "./icon.presets"
 
 export interface IconProps {
   /**
    * Style overrides for the icon image
    */
-  style?: ImageStyle
+  style?: IconStyle
 
   /**
    * Style overrides for the icon container
@@ -18,4 +19,6 @@ export interface IconProps {
    */
 
   icon?: IconTypes
+
+  preset?: IconPresetNames
 }

@@ -22,10 +22,8 @@ import { Text } from "../../components/text"
 import { screenHeight, screenWidth } from "../../utils/dimension"
 import { Expense } from "../../models/expense"
 
-import RepeatIcon from "./repeat-snap.svg"
-import SnapIcon from "./snap-max.svg"
-import CheckIcon from "./check.svg"
 import { useStore } from "../../models/root-store"
+import { Icon } from "../../components/icon"
 
 const PICTURE_OPTIONS = {
   quality: 1,
@@ -80,10 +78,10 @@ const CONTINUE: ViewStyle = {
 }
 
 const ICON: ImageStyle & TextStyle = {
+  color: color.palette.white,
   alignSelf: "center",
   width: 44,
   height: 44,
-  color: color.palette.white,
 }
 
 export interface CameraScreenProps extends NavigationScreenProps<{ expenseData?: Expense }> {}
@@ -190,16 +188,16 @@ export const CameraScreen: React.FunctionComponent<CameraScreenProps> = props =>
                   setVisionData([])
                 }}
               >
-                <RepeatIcon style={ICON} />
+                <Icon preset="button" icon="repeat" />
               </Button>
               <Button style={CONTINUE} preset="submit" onPressOut={uploadImage}>
-                <CheckIcon style={ICON} />
+                <Icon preset="button" icon="check" />
               </Button>
             </>
           )}
           {!imageData && (
             <Button style={CONTINUE} onPress={takePicture}>
-              <SnapIcon style={ICON} />
+                <Icon preset="button" icon="snap" />
             </Button>
           )}
         </View>
