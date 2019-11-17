@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { View, ViewStyle, Linking, ImageStyle, Image } from "react-native"
+import { View, ViewStyle, Linking, ImageStyle, Image, TouchableOpacity } from "react-native"
 import { CardProps } from "./expense-card.props"
 import { spacing, color } from "../../theme"
 import { TextField } from "../text-field"
@@ -8,6 +8,7 @@ import { ExpenseDetail } from "./expense-detail"
 
 import Carousel from "react-native-snap-carousel"
 import { Icon } from "../icon"
+import { Toast } from "../../services/native/toast"
 
 const EXPENSE_CONTAINER: ViewStyle = {
   margin: spacing[4],
@@ -77,12 +78,16 @@ export function ExpenseCard({ data, baseUrl, onPressCamera, onSubmitComment }: C
             sliderWidth={cardWidth * 0.9}
             itemWidth={cardWidth* 0.9}
             renderItem={({ item, index }) => (
-              <Image
-                style={IMAGE}
-                source={{
-                  uri: `${baseUrl}${item.url}`,
-                }}
-              />
+              <TouchableOpacity onPressOut={()=> {
+                Toast.show('Awesome', Toast.SHORT)
+              }}>             
+                <Image
+                  style={IMAGE}
+                  source={{
+                    uri: `${baseUrl}${item.url}`,
+                  }}
+                />
+              </TouchableOpacity>
             )}
           />
         </View>
