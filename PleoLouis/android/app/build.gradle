@@ -187,6 +187,8 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.google.firebase:firebase-analytics:17.2.1'
     implementation 'com.google.firebase:firebase-core:17.2.1'
+    implementation 'com.facebook.fresco:fresco:2.0.0'
+    implementation 'me.relex:photodraweeview:2.0.0'
 
     implementation (project(':react-native-text-detector')) {
         exclude group: 'com.google.firebase'
