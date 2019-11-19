@@ -6,9 +6,10 @@ import { TextField } from "../text-field"
 import { Button } from "../button"
 import { ExpenseDetail } from "./expense-detail"
 
-import Carousel from "react-native-snap-carousel"
+import Carousel, { Pagination } from "react-native-snap-carousel"
 import { Icon } from "../icon"
-import { Toast } from "../../services/native/toast"
+
+import { Popup } from "../../services/native/popup"
 
 const EXPENSE_CONTAINER: ViewStyle = {
   margin: spacing[4],
@@ -45,13 +46,43 @@ const ACTION_BUTTON: ViewStyle = {
 
 const CAROUSEL_CONTAINER: ViewStyle = {
   paddingBottom: spacing[4],
-  alignItems: "center"
+  alignItems: "center",
 }
 
 const IMAGE: ImageStyle = {
   width: "100%",
   height: 100,
   borderRadius: 15,
+}
+
+const PAGINATION_CONTAINER: ViewStyle = {
+  borderTopRightRadius: 15,
+  borderTopLeftRadius: 15,
+  position: "absolute",
+  backgroundColor: "rgba(0,0,0, 0.7)",
+  zIndex: 2,
+  bottom: spacing[4],
+  minHeight: 10,
+  height: 10,
+  paddingVertical: 5,
+  justifyContent: "space-around",
+  width: "30%",
+}
+
+const PAGINATION_DOT_CONTAINER: ViewStyle = {
+  padding: 0,
+  margin: 0,
+  height: 1,
+  minHeight: 0,
+  maxHeight: 0,
+}
+
+const PAGINATION_DOT: ViewStyle = {
+  height: 8,
+  width: 5,
+  borderRadius: 5,
+  marginHorizontal: spacing[4],
+  backgroundColor: "rgba(255, 255, 255, 0.92)",
 }
 
 /**
@@ -63,6 +94,8 @@ export function ExpenseCard({ data, baseUrl, onPressCamera, onSubmitComment }: C
   const { email } = data.user
   const [draftComment, setDraftComment] = useState(data.comment)
 
+  const [activeSlide, setActiveSlide] = useState(0)
+
   const [cardWidth, setCardWidth] = useState(360)
 
   React.useEffect(() => {
@@ -73,14 +106,32 @@ export function ExpenseCard({ data, baseUrl, onPressCamera, onSubmitComment }: C
     <View style={EXPENSE_CONTAINER} onLayout={e => setCardWidth(e.nativeEvent.layout.width)}>
       {receipts.length > 0 && (
         <View style={CAROUSEL_CONTAINER}>
+          <Pagination
+            dotContainerStyle={PAGINATION_DOT_CONTAINER}
+            containerStyle={PAGINATION_CONTAINER}
+            dotStyle={PAGINATION_DOT}
+            dotsLength={receipts.length}
+            activeDotIndex={activeSlide}
+            inactiveDotStyle={{
+              margin: 0,
+              padding: 0,
+              // Define styles for inactive dots here
+            }}
+            inactiveDotOpacity={0.4}
+            inactiveDotScale={0.6}
+          />
           <Carousel
             data={[...receipts]}
             sliderWidth={cardWidth * 0.9}
-            itemWidth={cardWidth* 0.9}
-            renderItem={({ item, index }) => (
-              <TouchableOpacity onPressOut={()=> {
-                Toast.show('Awesome', Toast.SHORT)
-              }}>             
+            itemWidth={cardWidth * 0.9}
+            onSnapToItem={setActiveSlide}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                onLongPress={() => {
+                  // Toast.show('Awesome', Toast.SHORT)
+                  Popup.popImage(`${baseUrl}${item.url}`)
+                }}
+              >
                 <Image
                   style={IMAGE}
                   source={{
@@ -99,7 +150,7 @@ export function ExpenseCard({ data, baseUrl, onPressCamera, onSubmitComment }: C
         </View>
         <View style={ACTION_CONTAINER}>
           <Button style={ACTION_BUTTON} onPressOut={() => onPressCamera(data)}>
-            <Icon preset="action" icon="camera"/>
+            <Icon preset="action" icon="camera" />
           </Button>
           <Button
             style={ACTION_BUTTON}
@@ -107,7 +158,7 @@ export function ExpenseCard({ data, baseUrl, onPressCamera, onSubmitComment }: C
               Linking.openURL(`mailto:${email}`)
             }}
           >
-            <Icon preset="action" icon="mail"/>
+            <Icon preset="action" icon="mail" />
           </Button>
         </View>
       </View>
