@@ -6,15 +6,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@android:drawable/screen_background_dark_transparent"
     >
 
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/popup_image_drawee"
+    <me.relex.photodraweeview.PhotoDraweeView
+        android:id="@+id/photo_drawee_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:failureImage="@android:drawable/screen_background_dark"
+        app:failureImageScaleType="centerInside"
+        app:placeholderImage="@android:drawable/screen_background_light_transparent"
+        app:placeholderImageScaleType="fitCenter"
+        app:progressBarAutoRotateInterval="1000"
+        app:progressBarImage="@android:drawable/progress_horizontal"
+        app:progressBarImageScaleType="centerInside"
         android:layout_margin="50dp"
         app:roundedCornerRadius="20dp"
-
         />
 
 </LinearLayout>

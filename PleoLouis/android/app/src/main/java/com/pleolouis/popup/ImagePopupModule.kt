@@ -1,15 +1,19 @@
 package com.pleolouis.popup
 
+import android.net.Uri
+import android.os.Build
+import android.transition.Transition
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.WindowManager
 import android.widget.PopupWindow
 import android.widget.Toast
-import com.facebook.drawee.view.SimpleDraweeView
+import androidx.annotation.RequiresApi
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.pleolouis.R
+import me.relex.photodraweeview.PhotoDraweeView
 
 
 /**
@@ -22,11 +26,9 @@ class ImagePopupModule(reactContext: ReactApplicationContext) : ReactContextBase
         return "ImagePopupModule"
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     @ReactMethod
     fun popImage(uri : String) {
-
-        Toast.makeText(reactApplicationContext, uri, Toast.LENGTH_SHORT).show()
-
         // inflate the layout of the popup window
         val inflater = LayoutInflater.from(currentActivity)
         val popupView = inflater.inflate(R.layout.image_popup, null)
@@ -38,11 +40,25 @@ class ImagePopupModule(reactContext: ReactApplicationContext) : ReactContextBase
 
         val popupWindow = PopupWindow(popupView, width, height, focusable)
 
+        popupWindow.enterTransition = android.transition.Fade()
+        popupWindow.exitTransition = android.transition.Fade()
+
         // show the popup window
         popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0)
 
-//        val draweeView = popupView.findViewById(R.id.popup_image_drawee) as SimpleDraweeView
+        val draweeView = popupView.findViewById<PhotoDraweeView>(R.id.photo_drawee_view)
+//        draweeView.setPhotoUri(Uri.parse(uri))
+
 //        draweeView.setImageURI(uri)
+        draweeView.setOnViewTapListener{ view, x, y ->
+            Toast.makeText(reactApplicationContext, "Common man...", Toast.LENGTH_SHORT).show()
+            draweeView.setImageURI("https://raw.githubusercontent.com/facebook/fresco/master/docs/static/logo.png", reactApplicationContext)
+        }
+
+        draweeView.setOnPhotoTapListener{ view, x, y ->
+            Toast.makeText(reactApplicationContext, "Common man...", Toast.LENGTH_SHORT).show()
+            draweeView.setImageURI("https://raw.githubusercontent.com/facebook/fresco/master/docs/static/logo.png", reactApplicationContext)
+        }
 
         popupView.setOnTouchListener { _, _ ->
             popupWindow.dismiss()
