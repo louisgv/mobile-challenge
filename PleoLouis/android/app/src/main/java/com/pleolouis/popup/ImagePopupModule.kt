@@ -1,14 +1,16 @@
 package com.pleolouis.popup
 
-import android.net.Uri
+import android.graphics.drawable.Animatable
 import android.os.Build
-import android.transition.Transition
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.WindowManager
 import android.widget.PopupWindow
-import android.widget.Toast
 import androidx.annotation.RequiresApi
+import com.facebook.drawee.backends.pipeline.Fresco
+import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder
+import com.facebook.drawee.controller.BaseControllerListener
+import com.facebook.imagepipeline.image.ImageInfo
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
@@ -47,18 +49,24 @@ class ImagePopupModule(reactContext: ReactApplicationContext) : ReactContextBase
         popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0)
 
         val draweeView = popupView.findViewById<PhotoDraweeView>(R.id.photo_drawee_view)
-//        draweeView.setPhotoUri(Uri.parse(uri))
 
-//        draweeView.setImageURI(uri)
-        draweeView.setOnViewTapListener{ view, x, y ->
-            Toast.makeText(reactApplicationContext, "Common man...", Toast.LENGTH_SHORT).show()
-            draweeView.setImageURI("https://raw.githubusercontent.com/facebook/fresco/master/docs/static/logo.png", reactApplicationContext)
+        draweeView.setImageURI(uri)
+
+        val controller: PipelineDraweeControllerBuilder = Fresco.newDraweeControllerBuilder()
+        controller.setUri(uri)
+        controller.oldController = draweeView.controller
+
+        controller.controllerListener = object : BaseControllerListener<ImageInfo?>() {
+            override fun onFinalImageSet(id: String?, imageInfo: ImageInfo?, animatable: Animatable?) {
+                super.onFinalImageSet(id, imageInfo, animatable)
+                if (imageInfo == null || draweeView == null) {
+                    return
+                }
+                draweeView.update(imageInfo.width, imageInfo.height)
+            }
         }
 
-        draweeView.setOnPhotoTapListener{ view, x, y ->
-            Toast.makeText(reactApplicationContext, "Common man...", Toast.LENGTH_SHORT).show()
-            draweeView.setImageURI("https://raw.githubusercontent.com/facebook/fresco/master/docs/static/logo.png", reactApplicationContext)
-        }
+        draweeView.controller = controller.build()
 
         popupView.setOnTouchListener { _, _ ->
             popupWindow.dismiss()

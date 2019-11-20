@@ -18,8 +18,6 @@
         app:placeholderImage="@android:drawable/screen_background_light_transparent"
         app:placeholderImageScaleType="fitCenter"
         app:progressBarAutoRotateInterval="1000"
-        app:progressBarImage="@android:drawable/progress_horizontal"
-        app:progressBarImageScaleType="centerInside"
         android:layout_margin="50dp"
         app:roundedCornerRadius="20dp"
         />
