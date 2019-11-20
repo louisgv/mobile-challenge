@@ -5,3 +5,13 @@ declare module "*.svg" {
 }
 
 declare type IconStyle = ImageStyle & TextStyle
+
+declare type VisionResponse = {
+  text: string
+  bounding: {
+    height: number
+    width: number
+    left: number
+    top: number
+  }
+}
