@@ -1,6 +1,5 @@
 # Expenses
-An expense native app, created in React Native TypeScript with native Android writtent in Kotlin. 
-
+An expense mobile app, created in React Native + TypeScript. The native Android module is written in Kotlin. 
 
 # Screenshots
 - [Pull# 25](https://github.com/louisgv/mobile-challenge/pull/25) 
