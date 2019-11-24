@@ -1,5 +1,10 @@
 # Expenses
-An expense native app, created in React Native TypeScript with native Android writtent in Kotlin.
+An expense native app, created in React Native TypeScript with native Android writtent in Kotlin. 
+
+
+# Screenshots
+- [Pull# 25](https://github.com/louisgv/mobile-challenge/pull/25) 
+- [Pull# 28](https://github.com/louisgv/mobile-challenge/pull/28) 
 
 ## Features:
 - List expenses from API (serving on `localhost:3000`. Refers to run instruction below)
