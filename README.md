@@ -1,13 +1,42 @@
-# Mobile challenge
-Implement an expenses list fetching all expenses from the provided API. Allow the user to add notes and upload receipt pictures to each expense.
+# Expenses
+An expense native app, created in React Native TypeScript with native Android writtent in Kotlin.
 
-See the [API details](https://github.com/pleo-io/mobile-challenge/tree/master/api) for implementation.
+## Features:
+- List expenses from API (serving on `localhost:3000`. Refers to run instruction below)
+- Add comment on an expense
+- Snap a receipt image for an existing expense. The app uses MLKit to parse text from the image and use that to score the validity of the image. (Simple token matching)
+- Filter receipt
+- Simple pagination
+- Pinch/zoom image view using Fresco and PhotoView.
 
-## Functional requirements
-- User can list expenses
-- User can add a comment on an expense
-- User can filter on expenses (client side filters)
-- User can add a receipt image on an expense
+## Pre-req
+- nodejs + npm
+- yarn
+
+## Installation:
+
+```
+cd api
+npm i
+cd ../PleoLouis
+yarn
+```
+
+## Run instructions:
+
+On one terminal, run:
+```
+cd api/
+npm start
+```
+
+On another:
+```
+cd PleoLouis
+yarn start
+```
+
+Then open the android studio project, and run the app. If nothing load, run `yarn adb` in `PleoLouis` to bridge the ports.
 
 ## General requirements
 Multiple app screen application using ReactNative and Java/Kotlin/Swift: 
